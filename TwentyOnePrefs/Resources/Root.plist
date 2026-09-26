@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>title</key>
+	<string>TwentyOne</string>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Last.fm Scrobbling</string>
+			<key>footerText</key>
+			<string>Scrobbles played tracks to your Last.fm account directly from Apple Music.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.pisknk.twentyone</string>
+			<key>key</key>
+			<string>lastFmEnabled</string>
+			<key>label</key>
+			<string>Enable Scrobbling</string>
+			<key>PostNotification</key>
+			<string>com.pisknk.twentyone.prefsChanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.pisknk.twentyone</string>
+			<key>key</key>
+			<string>lastFmShowBadge</string>
+			<key>label</key>
+			<string>Show Countdown Badge</string>
+			<key>PostNotification</key>
+			<string>com.pisknk.twentyone.prefsChanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.pisknk.twentyone</string>
+			<key>key</key>
+			<string>lastFmNowPlayingEnabled</string>
+			<key>label</key>
+			<string>Update Now Playing Status</string>
+			<key>PostNotification</key>
+			<string>com.pisknk.twentyone.prefsChanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Log In with Last.fm</string>
+			<key>action</key>
+			<string>lastFmAuthAction:</string>
+			<key>id</key>
+			<string>lastFmAuthButton</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Scrobble Threshold</string>
+			<key>footerText</key>
+			<string>Minimum playback percentage before scrobbling.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>0.5</real>
+			<key>defaults</key>
+			<string>com.pisknk.twentyone</string>
+			<key>key</key>
+			<string>lastFmThreshold</string>
+			<key>min</key>
+			<real>0.2</real>
+			<key>max</key>
+			<real>1.0</real>
+			<key>showValue</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.pisknk.twentyone.prefsChanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Blacklist</string>
+			<key>footerText</key>
+			<string>Prevent specific artists or albums from being scrobbled to Last.fm.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Artists</string>
+			<key>action</key>
+			<string>openArtistsBlacklist:</string>
+			<key>id</key>
+			<string>blacklistArtistsLink</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>label</key>
+			<string>Albums</string>
+			<key>action</key>
+			<string>openAlbumsBlacklist:</string>
+			<key>id</key>
+			<string>blacklistAlbumsLink</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Flush Offline Scrobbles</string>
+			<key>action</key>
+			<string>flushOfflineQueueAction:</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Apply changes by restarting the Apple Music app.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Restart Apple Music</string>
+			<key>action</key>
+			<string>restartMusicAppAction:</string>
+			<key>id</key>
+			<string>restartMusicButton</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Stay tuned coz Hot stuff are brewing soon ;3</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>View Source Code</string>
+			<key>action</key>
+			<string>openRepo:</string>
+		</dict>
+	</array>
+</dict>
+</plist>

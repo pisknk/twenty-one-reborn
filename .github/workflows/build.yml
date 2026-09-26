@@ -1,0 +1,114 @@
+name: Build TwentyOne (All Variants)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v4
+
+    - name: setup theos
+      run: |
+        brew install make ldid
+
+        echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
+
+        export THEOS=$HOME/theos
+        echo "THEOS=$THEOS" >> $GITHUB_ENV
+        echo "$THEOS/bin" >> $GITHUB_PATH
+
+        git clone --recursive --quiet https://github.com/theos/theos.git $THEOS
+
+        mkdir -p $THEOS/lib
+
+    - name: setup ios sdk
+      run: |
+        export THEOS=$HOME/theos
+
+        git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/theos/sdks/
+        cd sdks
+        git sparse-checkout set --no-cone iPhoneOS16.5.sdk
+        git checkout
+        mkdir -p $THEOS/sdks
+        mv *.sdk $THEOS/sdks/
+        cd ..
+        rm -rf sdks
+
+        ls -la $THEOS/sdks/
+
+    - name: update version from run number
+      run: |
+        cd $GITHUB_WORKSPACE
+
+        BASE_VERSION="$(sed -n 's/^Version: //p' control)"
+        VERSION="${BASE_VERSION}.${{ github.run_number }}"
+
+        sed -i '' "s/^Version: .*/Version: $VERSION/" control
+
+        echo "Updated version to: $VERSION"
+        grep "^Version:" control
+
+    - name: build rootless variant (arm64 + arm64e)
+      run: |
+        export THEOS=$HOME/theos
+        export PATH=$THEOS/bin:$PATH
+        cd $GITHUB_WORKSPACE
+        mkdir -p artifacts
+
+        sed -i '' "s/^Architecture: .*/Architecture: iphoneos-arm64/" control
+        make package THEOS_PACKAGE_SCHEME=rootless THEOS_PACKAGE_ARCH=iphoneos-arm64 DEBUG=0 FINALPACKAGE=1 ARCHS="arm64 arm64e" TARGET=iphone:clang:16.5:16.0
+
+        cp packages/*_iphoneos-arm64.deb artifacts/
+
+    - name: build rootful variant (arm64)
+      run: |
+        export THEOS=$HOME/theos
+        export PATH=$THEOS/bin:$PATH
+        cd $GITHUB_WORKSPACE
+
+        make clean
+
+        sed -i '' "s/^Architecture: .*/Architecture: iphoneos-arm/" control
+        make package THEOS_PACKAGE_ARCH=iphoneos-arm DEBUG=0 FINALPACKAGE=1 ARCHS="arm64" TARGET=iphone:clang:16.5:16.0
+
+        cp packages/*_iphoneos-arm.deb artifacts/
+
+    - name: build roothide variant (arm64e)
+      run: |
+        export THEOS=$HOME/theos
+        export PATH=$THEOS/bin:$PATH
+        cd $GITHUB_WORKSPACE
+
+        make clean
+
+        sed -i '' "s/^Architecture: .*/Architecture: iphoneos-arm64e/" control
+        make package THEOS_PACKAGE_SCHEME=roothide THEOS_PACKAGE_ARCH=iphoneos-arm64e THEOS_MODULE_PATH="$GITHUB_WORKSPACE/mod" DEBUG=0 FINALPACKAGE=1 ARCHS="arm64e" TARGET=iphone:clang:16.5:16.0
+
+        cp packages/*_iphoneos-arm64e.deb artifacts/
+
+    - name: verify artifacts
+      run: |
+        cd $GITHUB_WORKSPACE
+        ls -la artifacts/
+
+        DEB_COUNT=$(ls -1 artifacts/*.deb 2>/dev/null | wc -l | tr -d ' ')
+        if [ "$DEB_COUNT" -ne 3 ]; then
+          echo "ERROR: expected 3 debs (rootless/rootful/roothide), got $DEB_COUNT"
+          exit 1
+        fi
+        echo "All 3 variant artifacts present."
+
+    - name: upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: twentyone-package
+        path: artifacts/
+        retention-days: 30

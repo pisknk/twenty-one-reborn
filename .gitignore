@@ -1,0 +1,6 @@
+/.theos
+.DS_Store
+/packages
+*.ips
+/Music.app
+MusicApplication_symbols.txt
